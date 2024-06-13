@@ -1,0 +1,171 @@
+{% extends 'main.html' %}
+{% block info %}
+{% load static %}
+
+
+<section class="ftco-section">
+	<div class="container-fluid px-md-5">
+		<div class="row justify-content-center mb-5 pb-3">
+			<div class="col-md-12 heading-section ftco-animate text-center">
+				<h3 class="subheading">Филиал {{branch.name}}, Салон {{branch.salon.name}}</h3>
+				<h2 class="mb-1">Услуги</h2>
+			</div>
+		</div>
+		<div>
+			<input class="poisk" style="border-radius: 6px;" type="text" id="searchInput" placeholder="Услуга...">
+
+			<select id="ratingFilter">
+				<option value="all">Все</option>
+				<option value="3">Неплохо (3 и выше)</option>
+				<option value="4">Достаточно хорошо (4 и выше)</option>
+				<option value="5">Лучшее (5)</option>
+			</select>
+			<button style="	
+			font-size: 15px;
+			border-radius: 6px;" class="buttonsearch" onclick="filterBlocks()">Поиск</button>
+			<button style="	
+			font-size: 15px;
+			border-radius: 6px;" class="buttonsearch1" onclick="showAllBlocks()">Показать все</button>
+		</div>
+		<div class="row align-items-center">
+			{% for i in services %}
+			<div class="col-lg-4 d-flex align-items-stretch search_block" id="{{i.name}} {{i.rating}}">
+				<div id="accordion" class="myaccordion w-100 text-center py-5 px-1 px-md-4">
+					<div>
+
+						<img style="border-radius:5px;object-fit: cover; " width="300px" height="200px"
+							src="/media/{{i.image}}" alt="">
+					</div>
+
+					<div class="card">
+						<div class="card-header" id="heading{{i.queue_info}}">
+							<h2 class="mb-0">
+								<h5 class="mb-0" data-toggle="collapse" data-target="#collapse{{i.queue_info}}"
+									aria-expanded="true" aria-controls="collapse{{i.queue_info}}">
+									{{i.name}}
+
+								</h5>
+								<h6>Рейтинг услуги: {{i.rating}}</h6>
+					
+								<button style="	
+										 font-size: 15px;
+										 border-radius: 6px;" onclick="window.location.href='/record/{{i.id}}/'">Записаться</button>
+								
+							</h2>
+						</div>
+
+					</div>
+
+
+
+				</div>
+			</div>
+
+			{% endfor %}
+
+		</div>
+	</div>
+</section>
+
+<style>
+	.rating {
+  unicode-bidi: bidi-override;
+  direction: rtl;
+}
+
+.star {
+  cursor: pointer;
+}
+.star_ok {
+  cursor: pointer;
+  color: gold;
+}
+.star:hover,
+.star:hover ~ .star {
+  color: gold;
+}
+
+.star.clicked,
+.star.clicked ~ .star {
+  color: gold;
+}
+
+</style>
+<section style="display: flex; gap:10px; margin: 40px; ">
+<h2 class="mb-1">Отзывы о салоне</h2>
+</section>
+<section style="display: flex; gap:20px; margin: 40px; ">
+	
+	{% for i in rec %}
+	
+	{% if i.feedback != "Отменено" %}
+	{% if i.feedback  %}
+	<div style="display: flex; flex-direction: column; padding: 10px; box-shadow: 0px 1px 4px 0px rgb(0 0 0 / 38%);
+    border-radius: 6px;">
+	<h6 class="mb-0">{{i.user.first_name}}:<br> {{i.feedback}}</h6>
+	<div class="rating">
+		{% for _ in ''|ljust:i.rating %}
+		<span class="star_ok">&#9733;</span>
+		{% endfor %}
+
+	</div>
+	{% if i.feedback_rev %}
+	<h6 class="mb-0">Мастер:<br> {{i.feedback}}</h6>
+
+	{% endif %}
+</div>
+	{% endif %}
+	{% endif %}
+	{% endfor %}
+</section>
+
+<script type="text/javascript">
+	function filterBlocks() {
+		const searchInput = document.getElementById("searchInput").value;
+		const setqrBlocks = document.querySelectorAll(".search_block");
+
+		setqrBlocks.forEach((block) => {
+			const blockId = block.id.toLowerCase(); // Преобразование в нижний регистр
+			if (blockId.includes(searchInput)) {
+				block.style.display = "table-row"; // Показать блок с совпадающим идентификатором
+			} else {
+				block.style.display = "none"; // Скрыть остальные блоки
+			}
+		});
+	}
+	document.getElementById("searchInput").addEventListener("input", filterBlocks);
+
+	// Функция для отображения всех блоков
+	function showAllBlocks() {
+		const setqrBlocks = document.querySelectorAll(".search_block");
+
+		setqrBlocks.forEach((block) => {
+			block.style.display = "table-row"; // Показать все блоки
+		});
+		document.getElementById("searchInput").value = "";
+		document.getElementById("searchInput").setAttribute("placeholder", "Поиск..");
+	}
+
+
+
+function filterBlocks1() {
+    const selectedRating = document.getElementById("ratingFilter").value;
+    const setqrBlocks = document.querySelectorAll(".search_block");
+
+    setqrBlocks.forEach((block) => {
+        const blockId = block.id.split(" ");
+        const rating = parseInt(blockId[blockId.length - 1]);
+
+        if (selectedRating === "all") {
+            block.style.display = "block"; // Показать все блоки
+        } else if (rating >= parseInt(selectedRating)) {
+            block.style.display = "block"; // Показать блоки с рейтингом >= выбранного значения
+        } else {
+            block.style.display = "none"; // Скрыть остальные блоки
+        }
+    });
+}
+
+document.getElementById("ratingFilter").addEventListener("change", filterBlocks1);
+</script>
+{% endblock %}

@@ -1,0 +1,111 @@
+{% extends 'main.html' %}
+{% block info %}
+{% load static %}
+
+
+<section class="ftco-section">
+	<div class="container-fluid px-md-5">
+		<div class="row justify-content-center mb-5 pb-3">
+			<div class="col-md-12 heading-section ftco-animate text-center">
+			
+				<h2 class="mb-1">Ваш салон</h2>
+			</div>
+		</div>
+		
+		<div class="row align-items-center">
+			
+			<div class="col-lg-4 d-flex align-items-stretch search_block" id="{{salon.name}} {{salon.rating}}">
+				<div id="accordion" class="myaccordion w-100 text-center py-5 px-1 px-md-4">
+					<div>
+
+						<img style="border-radius:5px;  object-fit: cover;" width="auto" height="200px"
+							src="/media/{{salon.image}}" alt="">
+					</div>
+
+					<div class="card">
+						<div class="card-header" id="heading{{salon.queue_info}}">
+							<h2 class="mb-0">
+								<h5 class="mb-0" data-toggle="collapse" data-target="#collapse{{salon.queue_info}}"
+									aria-expanded="true" aria-controls="collapse{{salon.queue_info}}">
+									{{salon.name}}
+
+								</h5>
+								<h6>Рейтинг салона: {{salon.rating}}</h6>
+								<div style="display: flex; flex-direction: column;">
+									<h5>Количество услуг {{count_services}}</h5>
+									<h5>Количество мастеров{{count_masters}}</h5>
+									<h5>Доход с салона {{money_comission}}</h5>
+									<h5>Доход мастера {{money_master}}</h5>
+								</div>
+								<button style="	
+										 font-size: 15px;
+										 border-radius: 6px;" onclick="window.location.href='/salon/{{salon.id}}/'">Выбрать филиал</button>
+							
+							</h2>
+						</div>
+
+					</div>
+
+
+
+				</div>
+			</div>
+
+			
+
+		</div>
+	</div>
+</section>
+
+
+
+<script type="text/javascript">
+	function filterBlocks() {
+		const searchInput = document.getElementById("searchInput").value;
+		const setqrBlocks = document.querySelectorAll(".search_block");
+
+		setqrBlocks.forEach((block) => {
+        const blockId = block.id.toLowerCase(); // Преобразование в нижний регистр
+        if (blockId.includes(searchInput)) {
+            block.style.display = "table-row"; // Показать блок с совпадающим идентификатором
+        } else {
+            block.style.display = "none"; // Скрыть остальные блоки
+        }
+    });
+	}
+	document.getElementById("searchInput").addEventListener("input", filterBlocks);
+
+	// Функция для отображения всех блоков
+	function showAllBlocks() {
+		const setqrBlocks = document.querySelectorAll(".search_block");
+
+		setqrBlocks.forEach((block) => {
+			block.style.display = "table-row"; // Показать все блоки
+		});
+		document.getElementById("searchInput").value = "";
+		document.getElementById("searchInput").setAttribute("placeholder", "Поиск..");
+	}
+
+	
+function filterBlocks1() {
+    const selectedRating = document.getElementById("ratingFilter").value;
+    const setqrBlocks = document.querySelectorAll(".search_block");
+
+    setqrBlocks.forEach((block) => {
+        const blockId = block.id.split(" ");
+        const rating = parseInt(blockId[blockId.length - 1]);
+
+        if (selectedRating === "all") {
+            block.style.display = "block"; // Показать все блоки
+        } else if (rating >= parseInt(selectedRating)) {
+            block.style.display = "block"; // Показать блоки с рейтингом >= выбранного значения
+        } else {
+            block.style.display = "none"; // Скрыть остальные блоки
+        }
+    });
+}
+
+document.getElementById("ratingFilter").addEventListener("change", filterBlocks1);
+</script>
+
+{% endblock %}

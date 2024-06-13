@@ -1,0 +1,23 @@
+Создание виртуального окружения
+python -m venv venv
+
+Активация виртуального окружения
+venv\Scripts\activate
+
+Создание тела проекта
+django-admin startproject beauty
+
+Команды для выполнения
+python manage.py 
+
+createsuperuser  - Создает суперпользователя
+makemigrations - Подготавливает наши модели к миграции
+migrate - Миграция
+runserver - Запуск проекта
+
+
+Ошибка
+No module named "Наимепнование"
+
+И его решение 
+pip install "Наимепнование"

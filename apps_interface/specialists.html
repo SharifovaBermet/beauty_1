@@ -1,0 +1,101 @@
+{% extends 'main.html' %}
+{% block info %}
+{% load static %}
+
+
+
+<section class="ftco-section">
+	<div class="container">
+		<div class="row justify-content-center mb-5">
+			<div class="col-md-12 heading-section text-center ftco-animate">
+				<h3 class="subheading">Мастера</h3>
+				<h2 class="mb-1">Специалисты города Бишкек</h2>
+			</div>
+			<div>
+				<input class="poisk" type="text" id="searchInput" placeholder="Поиск по имени мастера">
+				<select id="ratingFilter">
+					<option value="all">Все</option>
+
+				</select>
+			</div>
+		</div>
+		<div class="row " id="mastersContainer">
+			{% for i in masters_info %}
+			<div class="col-lg-3 d-flex search_block" id="{{i.nameofmaster}} {{i.direction}}">
+				<div class="coach align-items-stretch">
+					<!-- <div class="img" style="background-image: url({{i.photo.url}});"></div> -->
+					<img class="img" src="{{i.photo.url}}">
+					<div class="text bg-white p-4 ftco-animate">
+						<span class="subheading" id="info_experience">{{ i.direction }}</span>
+						<h3><a href="#">{{i.nameofmaster}}</a></h3>
+						<p> {{i.experience}}</p>
+						<ul class="ftco-social-media d-flex mt-4">
+							
+						</ul>
+						<p></p>
+					</div>
+				</div>
+			</div>
+			{% endfor %}
+		</div>
+	</div>
+</section>
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		const selectExperience = document.getElementById('ratingFilter');
+		const infoExperiences = document.querySelectorAll('#info_experience');
+
+		const uniqueExperiences = new Set(); // Используем Set для хранения уникальных значений
+
+		infoExperiences.forEach(infoExperience => {
+			uniqueExperiences.add(infoExperience.textContent.trim()); // Добавляем текстовое содержимое каждого элемента <p> в Set
+		});
+
+		uniqueExperiences.forEach(experience => {
+			const option = document.createElement('option'); // Создаем новый элемент <option>
+			option.value = experience; // Устанавливаем значение <option> равным тексту из <p>
+			option.textContent = experience; // Устанавливаем текст <option> равным тексту из <p>
+			selectExperience.appendChild(option); // Добавляем <option> в <select>
+		});
+	});
+</script>
+<script>
+	function filterBlocks() {
+		const searchInput = document.getElementById("searchInput").value.trim(); // Получение текста из поля ввода без обработки регистра
+		const setqrBlocks = document.querySelectorAll(".search_block");
+
+		setqrBlocks.forEach((block) => {
+			const blockId = block.id; // Получение идентификатора блока
+			if (blockId.includes(searchInput)) { // Проверка, содержит ли идентификатор блока введенный текст
+				block.style.display = ""; // Показать блок с совпадающим идентификатором
+			} else {
+				block.style.display = "none"; // Скрыть остальные блоки
+			}
+		});
+	}
+
+	document.getElementById("searchInput").addEventListener("input", filterBlocks);
+
+	function filterBlocks1() {
+		const selectedRating = document.getElementById("ratingFilter").value;
+		const setqrBlocks = document.querySelectorAll(".search_block");
+
+		setqrBlocks.forEach((block) => {
+			const blockId = block.id.split(" ");
+			const rating = blockId[blockId.length - 1];
+
+			if (selectedRating === "all") {
+				block.style.display = "block"; // Показать все блоки
+			} else if (rating == selectedRating) {
+				block.style.display = "block"; // Показать блоки с рейтингом >= выбранного значения
+			} else {
+				block.style.display = "none"; // Скрыть остальные блоки
+			}
+		});
+	}
+
+	document.getElementById("ratingFilter").addEventListener("change", filterBlocks1);
+</script>
+
+{% endblock %}

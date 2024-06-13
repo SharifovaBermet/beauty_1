@@ -1,0 +1,207 @@
+																																					{% extends 'main.html' %}
+{% block info %}
+{% load static %}
+{% load custom_filters %}
+<style>
+	.rating {
+  unicode-bidi: bidi-override;
+  direction: rtl;
+}
+
+.star {
+  cursor: pointer;
+}
+.star_ok {
+  cursor: pointer;
+  color: gold;
+}
+.star:hover,
+.star:hover ~ .star {
+  color: gold;
+}
+
+.star.clicked,
+.star.clicked ~ .star {
+  color: gold;
+}
+
+</style>
+<section class="ftco-section">
+	<div class="container-fluid px-md-5">
+		<div class="row justify-content-center mb-5 pb-3">
+			<div class="col-md-12 heading-section ftco-animate text-center">
+			
+				{% if user.username != "" %}
+				<h3 class="subheading">Здравствуйте {{rec.user.first_name}}!</h3>
+				{% else %}
+				<h3 class="subheading">Здравствуйте {{rec.name_of}}!</h3>
+				{% endif  %}
+				<h2 class="mb-1">Ваша бронь</h2>
+			</div>
+		</div>
+		<div class="row align-items-center">
+
+
+		
+			
+			<div class="col-lg-4 d-flex align-items-stretch">
+				<div id="accordion" class="myaccordion w-100 text-center py-5 px-1 px-md-4">
+
+
+					<div class="card">
+						<div class="card-header" id="heading{{i.queue_info}}">
+
+							{% if rec.user  %}
+							<h3 class="subheading"> {{rec.user.first_name}}!</h3>
+							{% else %}
+							<h3 class="subheading"> {{rec.name_of}}!</h3>
+							{% endif  %}
+							
+							<hr>
+
+							<h5 class="mb-0"> Салон {{ rec.services_info.branch.salon.name }}, по адресу
+								{{rec.services_info.branch.name }} </h5>
+
+							<h6 class="mb-0">Контакты салона: {{rec.services_info.branch.number}}</h6>
+							{% if rec.services != "" %}
+							<hr>
+							<h5 class="mb-0">Услуги: {{rec.services}}</h5>
+							{% endif %}
+							{% if rec.master != none %}
+							<hr>
+							<h5 class="mb-0">Мастер: {{rec.master_id.nameofmaster}}</h5>
+							{% endif %}
+							<hr>
+							{% if rec.user  %}
+							<h5 class="subheading"> {{rec.user.email}}</h5>
+							{% else %}
+							<h5 class="subheading"> {{rec.email_of}}</h5>
+							{% endif  %}
+							<hr>
+							<h5 class="mb-0">Дата записи: <b>{{rec.date_rec_info}}</b></h5>
+							<hr>
+							<h5 class="mb-0">Время записи: <b>{{rec.time_info}}</b></h5>
+							<hr>
+							
+							{% if rec.price != none %}
+							<h5 class="mb-0">Сумма: <b>{{rec.price}} сом</b></h5>
+							{% endif %}
+							<hr>
+							<h5 class="mb-0">Статус: <b>{{rec.status}}</b></h5>
+							
+							<br>
+							{% if rec.date_rec_info > current_datetime and rec.feedback != "Отменено" %}
+							<form method="post">
+								{% csrf_token %}
+								<input type="hidden" name="id" value="{{ rec.id }}" />
+								<button type="submit"
+									style=" font-size: 15px; border-radius: 6px;">Отменить
+									запись</button>
+							</form>
+							
+							{% endif %}
+							
+							
+						
+						
+						</div>
+
+					</div>
+
+
+				</div>
+			</div>
+			{% if error == "" %}
+			<div class="col-lg-4 d-flex align-items-stretch">
+				<form id="accordion" class="myaccordion w-100 text-center py-5 px-1 px-md-4" method="post">
+{% csrf_token %}
+<img style="margin-bottom: 15px;" src="https://mbank.kg/media/logo/Logo.svg" />
+					<div class="card">
+				             Введите данные для оплаты<br>
+              <input type="text" name="card" maxlength="25" required oninput="formatCardNumber(this)"
+                placeholder="0000 - 0000 - 0000 - 0000"><br>
+             <div style="width: 100%; display: flex; justify-content: space-between;">
+                <input style="width: 50%;" type="text" name="date_end" required placeholder="мм/гг"
+                  oninput="formatDate(this)"><br>
+                <input style="width: 40%;" type="password" name="csv" placeholder="CSV" required>
+
+              </div>
+
+
+              <br>
+              <button style="	
+                font-size: 15px;
+                border-radius: 6px;" type="submit"> Оплатить</button>
+			</div>
+			<h6 style="margin-top: 20px;">Примечание: MKassa будет подключена после развертывания системы на виртуальной машине, с установленным паралельно сервере безопасности.</h6>
+		</form></div>
+{% endif %}
+		</div>
+		<br><br><br>
+		
+		
+
+		</div>
+	</div>
+</section>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const stars = document.querySelectorAll('.star');
+  const ratingInput = document.querySelector('input[name="rating"]');
+  
+  stars.forEach(function(star) {
+    star.addEventListener('click', function() {
+      const value = parseInt(star.getAttribute('data-value'));
+      ratingInput.value = value;
+      
+      stars.forEach(function(s) {
+        if (parseInt(s.getAttribute('data-value')) <= value) {
+          s.classList.add('clicked');
+        } else {
+          s.classList.remove('clicked');
+        }
+      });
+    });
+  });
+});
+
+
+</script>
+
+<script>
+	function formatDate(input) {
+  
+	  var date = input.value.replace(/\D/g, '');
+  
+  
+	  if (date.length <= 4) {
+  
+		if (date.length === 4) {
+		  var month = date.slice(0, 2);
+		  var year = date.slice(2);
+		  input.value = month + '/' + year;
+		} else {
+		  input.value = date;
+		}
+	  } else {
+		input.value = date.slice(0, 4);
+	  }
+	}
+  </script>
+  <script>
+	function formatCardNumber(input) {
+  
+	  var cardNumber = input.value.replace(/\D/g, '');
+  
+	  var formattedCardNumber = cardNumber.replace(/(\d{4})(?=\d)/g, '$1 - ');
+  
+  
+	  if (formattedCardNumber.length <= 25) {
+		input.value = formattedCardNumber;
+	  } else {
+		input.value = formattedCardNumber.slice(0, 25);
+	  }
+	}
+  </script>
+{% endblock %}

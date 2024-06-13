@@ -1,0 +1,190 @@
+{% extends 'main.html' %}
+{% block info %}
+{% load static %}
+{% load custom_filters %}
+<style>
+	.rating {
+  unicode-bidi: bidi-override;
+  direction: rtl;
+}
+
+.star {
+  cursor: pointer;
+}
+.star_ok {
+  cursor: pointer;
+  color: gold;
+}
+.star:hover,
+.star:hover ~ .star {
+  color: gold;
+}
+
+.star.clicked,
+.star.clicked ~ .star {
+  color: gold;
+}
+
+</style>
+
+<section class="ftco-section">
+	<div class="container-fluid px-md-5">
+		<div class="row justify-content-center mb-5 pb-3">
+			<div class="col-md-12 heading-section ftco-animate text-center">
+				
+				<h2 class="mb-1"> Ваше расписание:</h2>
+			</div>
+		</div>
+		<button style="	
+			font-size: 15px;
+			border-radius: 6px;" class="buttonsearch" onclick="window.location.href='/myaccount_info/'">Назад</button>
+			<br><br><br>
+			<style>
+				th{
+					color: black;
+    padding: 5px 10px;
+				}
+				.div_time{
+					padding: 5px 10px;
+					
+				}
+				h5{
+					font-size: 12px;	
+				}
+			</style>
+
+			<div>
+				<table border="1">
+					<tr>
+						<th style="border: 1px solid #DADCE0; color: #70757A; font-weight: 600;">Понедельник</th>
+						<th style="border: 1px solid #DADCE0; color: #70757A; font-weight: 600;">Вторник</th>
+						<th style="border: 1px solid #DADCE0; color: #70757A; font-weight: 600;">Среда</th>
+						<th style="border: 1px solid #DADCE0; color: #70757A; font-weight: 600;">Четверг</th>
+						<th style="border: 1px solid #DADCE0; color: #70757A; font-weight: 600;">Пятница</th>
+						<th style="border: 1px solid #DADCE0; color: #70757A; font-weight: 600;">Суббота</th>
+						<th style="border: 1px solid #DADCE0; color: #70757A; font-weight: 600;">Воскресенье</th>
+					</tr>
+					
+					<tr >
+						{% for day in weekdeys %}
+						
+							<td style="border: 1px solid #DADCE0; width:200px;" >
+								{% for i in records %}
+								
+								{% if i.date_rec_info >= start_of_week and i.date_rec_info <= end_of_week and i.weekday == day %}
+								<div class="div_time" style="
+								background: #8080804f;
+								border-radius: 6px;
+								margin: 6px;
+								margin-bottom: -26px;
+							">
+									<h5><b>{{ i.date_rec_info }} {{ i.time_info }}</b></h5>
+									<h5><b></b></h5>
+								</div>
+										<hr>
+									{% endif %}
+								{% endfor %}
+							</td>
+						{% endfor %}
+					</tr>
+					<tr >
+						{% for day in weekdeys %}
+						
+							<td style="border: 1px solid #DADCE0;" >
+								{% for i in records %}
+								
+								{% if i.date_rec_info >= start_of_week_2 and i.date_rec_info <= end_of_week_2 and i.weekday == day %}
+										<div class="div_time" style="
+										background: #8080804f;
+										border-radius: 6px;
+										margin: 6px;
+										margin-bottom: -26px;
+									">
+											<h5><b>{{ i.date_rec_info }} {{ i.time_info }}</b></h5>
+											<h5><b></b></h5>
+										</div>
+										<hr>
+									{% endif %}
+								{% endfor %}
+							</td>
+						{% endfor %}
+					</tr>
+					<tr >
+						{% for day in weekdeys %}
+						
+							<td style="border: 1px solid #DADCE0;" >
+								{% for i in records %}
+								
+								{% if i.date_rec_info >= start_of_week_3 and i.date_rec_info <= end_of_week_3 and i.weekday == day %}
+										<div class="div_time" style="
+										background: #8080804f;
+										border-radius: 6px;
+										margin: 6px;
+										margin-bottom: -26px;
+									">
+											<h5><b>{{ i.date_rec_info }} {{ i.time_info }}</b></h5>
+											<h5><b></b></h5>
+										</div>
+										<hr>
+									{% endif %}
+								{% endfor %}
+							</td>
+						{% endfor %}
+					</tr>
+					<tr >
+						{% for day in weekdeys %}
+						
+							<td style="border: 1px solid #DADCE0;" >
+								{% for i in records %}
+								
+								{% if i.date_rec_info >= start_of_week_4 and i.date_rec_info <= end_of_week_4 and i.weekday == day %}
+										<div class="div_time" style="
+										background: #8080804f;
+										border-radius: 6px;
+										margin: 6px;
+										margin-bottom: -26px;
+									">
+											<h5><b>{{ i.date_rec_info }} {{ i.time_info }}</b></h5>
+											<h5><b></b></h5>
+										</div>
+										<hr>
+									{% endif %}
+								{% endfor %}
+							</td>
+						{% endfor %}
+					</tr>
+				</table>
+			</div>
+			
+			
+			
+			
+	</div>
+</section>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const stars = document.querySelectorAll('.star');
+  const ratingInput = document.querySelector('input[name="rating"]');
+  
+  stars.forEach(function(star) {
+    star.addEventListener('click', function() {
+      const value = parseInt(star.getAttribute('data-value'));
+      ratingInput.value = value;
+      
+      stars.forEach(function(s) {
+        if (parseInt(s.getAttribute('data-value')) <= value) {
+          s.classList.add('clicked');
+        } else {
+          s.classList.remove('clicked');
+        }
+      });
+    });
+  });
+});
+
+
+</script>
+
+
+{% endblock %}

@@ -1,0 +1,504 @@
+{% extends 'main.html' %}
+{% block info %}
+{% load static %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://js.stripe.com/v3"></script>
+<style>
+ 
+article {
+  position: relative;
+
+  height: 61px;
+  margin: 5px;
+  float: left;
+  border: 2px solid wheat;
+  box-sizing: border-box;
+  width: 100%;
+ 
+}
+
+article div {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  line-height: 25px;
+  transition: .5s ease;
+  padding: 5px 10px;
+}
+
+article input {
+ 
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 237px;
+  height: 61px;
+  opacity: 0;
+  cursor: pointer;
+}
+
+input[type=checkbox]:checked ~ div {
+  background-color: wheat;
+  
+}
+.card-body ul li span:first-child {
+  width: 100%;
+}
+.card-body ul li span:last-child {
+  width: 100%;
+}
+  </style>
+<form method="post">
+  {% csrf_token %}
+  <section class="ftco-section">
+    <div class="container-fluid px-md-5">
+      <div class="row justify-content-center mb-5 pb-3">
+        <div class="col-md-12 heading-section ftco-animate text-center">
+          <h3 class="subheading">Быстрая запись</h3>
+          <h6 class="mb-1">Салон {{ services.branch.salon.name }}, по адресу {{ services.branch.name }}</h6>
+          <h3 class="mb-1">Выбранная услуга {{ services.name }}, мастер {{masters.nameofmaster}}</h3>
+        </div>
+      </div>
+      <h5 style="width: 100%;
+    display: flex;
+ 
+    justify-content: center;
+    margin-bottom: 20px;">{{error}}</h5>
+      <div class="row align-items-center">
+
+
+ 
+        <div class="col-lg-4 d-flex align-items-stretch">
+          <div id="accordion" class="myaccordion w-100 text-center py-5 px-1 px-md-4">
+            <div>
+              <h3>Выберите виды услуг</h3>
+              <p></p>
+            </div>
+          
+            <div class="card">
+              <div class="card-header" id="heading{{i.queue_info}}">
+                <h2 class="mb-0">
+                  <button class="d-flex align-items-center justify-content-between btn btn-link" data-toggle="collapse"
+                    data-target="#collapse{{i.queue_info}}" aria-expanded="true"
+                    aria-controls="collapse{{i.queue_info}}">
+                    {{services.name}}
+                    <i class="fa" aria-hidden="true"></i>
+                  </button>
+
+                </h2>
+              </div>
+              <div id="collapse{{i.queue_info}}" class="collapse show" aria-labelledby="heading{{i.queue_info}}"
+                data-parent="#accordion">
+                <div class="card-body text-left">
+                  <ul style="justify-content: start;
+                                        display: flex;
+                                        flex-direction: column;
+                                        align-items: start;">
+
+                    {% for j in view %}
+
+                    {% if services.name == j.service_view.service.name %}
+                    
+                    <li class="d-flex" style="justify-content: space-evenly;
+                                            color: black; gap:10px; width: 100%;">
+                                            <article class="feature2" >
+                      <input type="checkbox" id="{{j.name}}" name="checkbox{{j.id}}" value="{{j.id}}">
+                      <div>
+                        <span>
+                          {{j.service_view.name}} <br> {{j.price}} {{j.service_view.currency}}
+                        </span>
+                      </div>
+                    </article>
+                      <!-- <label for="{{j.id}}">{{j.name}} <br> {{j.price}} {{j.currency}} -->
+                    </li>
+                
+                    {% endif %}
+                    {% endfor %}
+
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+
+          </div>
+        </div>
+
+        <div>
+
+        </div>
+
+      </div>
+      <section class="ftco-section" >
+        <div class="container" >
+
+         
+          <div class="row" style="justify-content: center;"  >
+           
+            
+            <div class="col-lg-3 d-flex" style="display: none;" >
+              <div class="coach align-items-stretch">
+
+                <img class="img" src="{{masters.photo.url}}">
+                <div class="text bg-white p-4 ftco-animate">
+                  <span class="subheading">{{ masters.direction }}</span>
+                  <h3><a href="#">{{masters.nameofmaster}}</a></h3>
+                  <p> {{masters.experience}}</p>
+
+
+
+
+
+                  <div id="recordsInfo" >
+                  {% for j in records_info %}
+                  {% if j.date_rec_info > current_datetime %}
+                 
+                  <div data-target="{{ j.date_rec_info }}, {{ j.time_info }}, {{ j.master }}">{{ j.date_rec_info }}, {{ j.time_info }}, {{ j.master }}</div>
+                
+                
+                  {% endif%}
+                  {% endfor %}
+                </div>
+                
+                 
+                  <ul class="ftco-social-media d-flex mt-4">
+                    <li class="d-flex"
+                      style="justify-content: space-evenly;
+                                                                                                color: black; gap:10px">
+                                                                                                <div id="masters">
+                                                                                                <article class="feature2">
+                                                                                                 
+                                                                                                <input type="checkbox" checked id="{{ masters.id }}" name="masters" value="{{ masters.id }}" data-target=" {{ masters.nameofmaster }}" class="master-checkbox">
+                                                                                                <div>
+                                                                                                  <span style="color:black">
+                                                                                                  Выбрать мастера
+                                                                                                  </span>
+                                                                                                
+                                                                                              </div>
+                                                                                                <!-- <label for="{{ i.id }}">Выбрать мастера: {{ i.nameofmaster }}</label> -->
+                                                                                                </article>
+                                                                                              </div>
+                    </li>
+                  </ul>
+                  <p></p>
+                </div>
+              </div>
+            </div>
+          
+            
+
+          </div>
+        
+          <div style="display: flex;
+    justify-content: center;">
+          <button style="    font-size: 18px;
+    border-radius: 6px;
+    padding: 5px 10px;" type="button"
+            onclick="openModal()">Записаться</button>
+          </div>
+          <div id="myModal" class="modal">
+            <div class="modal-content">
+              <span class="close" onclick="closeModal()">&times;</span> <!-- Кнопка закрытия модального окна -->
+              {% if request.user.is_authenticated %}
+              Введите номер телефона<br>
+              <input type="text" name="number" required><br>
+              {% else %}
+              Введите Ваше Имя<br>
+              <input type="text" name="name_of_user" required><br>
+              Введите ваш электронный адресс<br>
+              <input type="email" name="email_of_user" required><br>
+              Введите номер телефона<br>
+              <input type="text" name="number" required><br>
+              {% endif %}
+              Выберите удобную дату для записи<br>
+              <input type="date" id="date_rec" name="date_rec" required placeholder="Выберите дату и время"><br>
+           
+              Выберите свободное время для записи
+              <div id="inputForm" style="width: 100%;
+            gap:6px;
+              display: flex;
+              flex-wrap: wrap; max-height: 60px;">
+                <style>
+                  .inputinfo {
+                    width:  23%;
+                    height: 32%;
+                    text-align: center;
+                    border-radius: 6px;
+                    /* border: 1px solid black; */
+                  }
+                </style>
+                <input type="text"  class="inputinfo" style="display: none" id="input1" readonly value="09:00"><br>
+                <input type="text" class="inputinfo" style="display: none" id="input2" readonly value="11:00"><br>
+                <input type="text" class="inputinfo" style="display: none" id="input3" readonly value="13:00"><br>
+                <input type="text" class="inputinfo" style="display: none" id="input4" readonly value="15:00"><br>
+                <input type="text" class="inputinfo" style="display: none" id="input5" readonly value="17:00"><br>
+                <input type="text" class="inputinfo" style="display: none" id="input6" readonly value="19:00"><br>
+              </div>
+            
+              <script>
+                document.addEventListener('DOMContentLoaded', (event) => {
+                    const dateInput = document.getElementById('date_rec');
+                    const today = new Date();
+                    const tomorrow = new Date(today);
+                    tomorrow.setDate(today.getDate() + 1);
+                    
+                    // Format the date as YYYY-MM-DD
+                    const year = tomorrow.getFullYear();
+                    const month = String(tomorrow.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed
+                    const day = String(tomorrow.getDate()).padStart(2, '0');
+                    const minDate = `${year}-${month}-${day}`;
+                    
+                    dateInput.setAttribute('min', minDate);
+                    
+                    dateInput.addEventListener('change', filterTimes);
+                });
+                
+                function filterTimes() {
+                    const dateInput = document.getElementById('date_rec');
+                    const selectedDate = new Date(dateInput.value);
+                    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+                    const formattedDate = selectedDate.toLocaleDateString('ru-RU', options);
+                    
+                    console.log("Selected Date:", formattedDate);
+                    
+                    const selectedMasters = Array.from(document.querySelectorAll('.master-checkbox:checked')).map(cb => cb.getAttribute('data-target').trim());
+                    console.log("Selected Masters:", selectedMasters);
+                    
+                    const inputElements = document.querySelectorAll('.inputinfo');
+                    inputElements.forEach(input => {
+                        input.classList.remove('hidden');
+                        input.style.display = 'block';
+                    });
+                    
+                    if (selectedMasters.length === 0) return;
+                    
+                    document.querySelectorAll('[data-target]').forEach(record => {
+                        const [recordDate, recordTime, recordMaster] = record.getAttribute('data-target').split(', ').map(s => s.trim());
+                        console.log("Record:", recordDate, recordTime, recordMaster);
+                        if (recordDate === formattedDate && selectedMasters.includes(recordMaster)) {
+                            inputElements.forEach(input => {
+                                if (input.value === recordTime) {
+                                    console.log(`Hiding time slot: ${recordTime}`);
+                                    input.classList.add('hidden');
+                                    input.style.display = 'none';
+                                }
+                            });
+                        }
+                    });
+                }
+            </script>
+              <!-- Введите данные для оплаты<br>
+              <input type="text" name="card" maxlength="25" required oninput="formatCardNumber(this)"
+                placeholder="0000 - 0000 - 0000 - 0000"><br> -->
+              <!-- <div style="width: 100%; display: flex; justify-content: space-between;">
+                <input style="width: 50%;" type="text" name="date_end" required placeholder="мм/гг"
+                  oninput="formatDate(this)"><br>
+                <input style="width: 40%;" type="password" name="csv" placeholder="CSV" required>
+
+              </div> -->
+
+
+              <br>
+              <button style="	
+                font-size: 15px;
+                border-radius: 6px;" type="submit"> Записаться</button>
+           <script async
+           src="https://js.stripe.com/v3/buy-button.js">
+         </script>
+         
+     
+        </div>
+              <script>
+                var stripe = Stripe(
+                  "pk_test_51Oy2seJDY9VQI9wbvyyixjV8c0Sem6PbYzNdqEoykKKAK5QTohGwr7HuFhnDvICoDgVJ0z13WLHl4mth2sUzAAQm00ff3bat3X"
+                )
+                document.getElementById("checkout").addEventListener("click", function () {
+                  event.preventDefault()
+                  stripe.redirectToCheckout({
+                    lineItems: [
+                      {
+                        price: "price_1PJQ0rJDY9VQI9wb0smFWpT9",
+                        quantity: 1,
+                      },
+                    ],
+                    mode: "subscription",
+                    successUrl: "http://127.0.0.1:8000/myaccount/",
+                    cancelUrl: "http://127.0.0.1:8000/myaccount/",
+                  }).then(function (result) {
+                    if (result.error) {
+                      console.error(result.error.message);
+                    }
+                  });
+
+                })
+              </script>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+  </section>
+
+</form>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+      const checkboxes = document.querySelectorAll('.master-checkbox');
+  
+      checkboxes.forEach(checkbox => {
+          checkbox.addEventListener('change', function() {
+              if (this.checked) {
+                  checkboxes.forEach(cb => {
+                      if (cb !== this) {
+                          cb.checked = false;
+                      }
+                  });
+              }
+          });
+      });
+  });
+  </script>
+  
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const inputs = document.querySelectorAll('#inputForm input');
+
+    inputs.forEach(input => {
+      input.addEventListener('click', function () {
+        // Сначала очищаем атрибут name у всех инпутов
+        inputs.forEach(i => i.removeAttribute('name'));
+        inputs.forEach(i => {
+          if (i.style.background === 'wheat') {
+              i.style.removeProperty('background');
+          }
+      });
+      
+        // Устанавливаем name="checked" на кликнутый инпут
+        this.setAttribute('name', 'checked');
+        this.setAttribute('style', 'background:wheat');
+      });
+    });
+  });
+  function showCalendar() {
+    var masterCheckboxes = document.querySelectorAll('input[type="checkbox"][name="masters"]');
+
+    masterCheckboxes.forEach(function (checkbox) {
+
+      var checkedCheckbox = document.querySelector('input[type="checkbox"][name="masters"]:checked');
+
+      if (checkedCheckbox) {
+        var id = checkedCheckbox.getAttribute('id');
+        var disabledDates = [];
+
+
+
+        var dates = document.querySelectorAll('h5[id="' + id + '"]');
+
+
+        dates.forEach(function (element) {
+          var dateParts = element.textContent.trim().split(' ');
+          var datePart = dateParts[0].split('.');
+          var timePart = dateParts[4].split(':');
+          var datePart1 = dateParts[2].split(' ');
+          var datePart2 = dateParts[1].split(' ');
+          var months = ["января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря"];
+
+
+          var monthName = dateParts[1];
+          var monthIndex = months.indexOf(monthName);
+
+
+          if (monthIndex !== -1) {
+            var month = monthIndex;
+          } else {
+            console.error("Недопустимое название месяца: " + monthName);
+          }
+
+          var day = parseInt(datePart[0], 10);
+          var month = parseInt(month, 10) - 1;
+          var year = parseInt(datePart1[0], 10);
+          var hours = parseInt(timePart[0], 10);
+          var minutes = parseInt(timePart[1], 10);
+          // Создаем объект Date из даты и времени
+          var date = new Date(year, month, day, hours, minutes);
+
+          disabledDates.push(date);
+        });
+        console.log(disabledDates)
+
+        // flatpickr('#date_rec', {
+        //   enableTime: true, 
+        //   dateFormat: "Y-m-d H:i",
+        //   disable: disabledDates,
+        // });
+
+      }
+      else {
+        // flatpickr('#date_rec', {
+        //   enableTime: true,
+        //   dateFormat: "Y-m-d H:i",
+        // });
+      }
+
+    });
+  }
+
+</script>
+<script>
+  function formatDate(input) {
+
+    var date = input.value.replace(/\D/g, '');
+
+
+    if (date.length <= 4) {
+
+      if (date.length === 4) {
+        var month = date.slice(0, 2);
+        var year = date.slice(2);
+        input.value = month + '/' + year;
+      } else {
+        input.value = date;
+      }
+    } else {
+      input.value = date.slice(0, 4);
+    }
+  }
+</script>
+<script>
+  function formatCardNumber(input) {
+
+    var cardNumber = input.value.replace(/\D/g, '');
+
+    var formattedCardNumber = cardNumber.replace(/(\d{4})(?=\d)/g, '$1 - ');
+
+
+    if (formattedCardNumber.length <= 25) {
+      input.value = formattedCardNumber;
+    } else {
+      input.value = formattedCardNumber.slice(0, 25);
+    }
+  }
+</script>
+<script>
+
+  function openModal() {
+    showCalendar()
+    document.getElementById('myModal').style.display = "block";
+  }
+
+
+  function closeModal() {
+    document.getElementById('myModal').style.display = "none";
+  }
+
+
+  // window.onclick = function (event) {
+  //   if (event.target == document.getElementById('myModal')) {
+  //     closeModal();
+  //   }
+  // }
+</script>
+{% endblock %}

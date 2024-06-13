@@ -1,0 +1,193 @@
+{% extends 'main.html' %}
+{% block info %}
+{% load static %}
+
+
+<section class="ftco-section">
+	<div class="container-fluid px-md-5">
+		<div class="row justify-content-center mb-5 pb-3">
+			<div class="col-md-12 heading-section ftco-animate text-center">
+				<h3 class="subheading">Бишкек</h3>
+				<h2 class="mb-1">Все филиалы</h2>
+			</div>
+		</div>
+		<div>
+			<input class="poisk" style="border-radius: 6px;" type="text" id="searchInput"
+				placeholder="Адресс, салон...">
+				<select id="ratingFilter">
+					<option value="all">Все</option>
+					<option value="3">Неплохо (3 и выше)</option>
+					<option value="4">Достаточно хорошо (4 и выше)</option>
+					<option value="5">Лучшее (5)</option>
+				</select>
+				<div style="display: flex;
+    align-items: center; margin-bottom: 20px; gap:10px">
+				<button style="	
+				font-size: 15px;
+				border-radius: 6px; display: none;" class="buttonsearch" id="filterButton">Показать ближайщие</button>
+				<span >Показать ближайщие</span>
+			<input type="range" id="distanceRange" name="distanceRange" min="200" max="5000" step="100" value="1000">
+			<span id="distanceValue">1000</span> м
+		</div>
+			
+			<button style="	
+			font-size: 15px;
+			border-radius: 6px;" class="buttonsearch" onclick="filterBlocks()">Поиск</button>
+			<button style="	
+			font-size: 15px;
+			border-radius: 6px; margin-bottom: 20px;" class="buttonsearch1" onclick="showAllBlocks()">Показать все</button>
+		</div>
+		<div class="row align-items-center">
+			{% for i in branch %}
+			<div class="col-lg-4 d-flex align-items-stretch search_block" id="{{i.name}} {{i.salon.name}} {{i.rating}}" data-target="{{i.h}}, {{i.d}}">
+				<div id="accordion" class="myaccordion w-100 text-center py-5 px-1 px-md-4">
+					<div>
+
+						<img style="border-radius:5px;object-fit: cover; " width="300px" height="200px"
+							src="/media/{{i.image}}" alt="">
+					</div>
+
+					<div class="card">
+						<div class="card-header" id="heading{{i.queue_info}}">
+							<h2 class="mb-0">
+								<h5>Салон: {{i.salon.name}}</h5>
+								<h5 class="mb-0" data-toggle="collapse" data-target="#collapse{{i.queue_info}}"
+									aria-expanded="true" aria-controls="collapse{{i.queue_info}}">
+
+									Адрес: {{i.name}}
+
+								</h5>
+								<h6>Рейтинг филиала: {{i.rating}}</h6>
+							
+								<button style="	
+										 font-size: 15px;
+										 border-radius: 6px;" onclick="window.location.href='/branch/{{i.id}}/'">Услуги филиала</button>
+							
+							
+								<button style="	
+								font-size: 15px;
+								border-radius: 6px;
+								background: green;" onclick="window.location.href='{{i.url_adress}}'">Построить маршрут</button>
+							</h2>
+						</div>
+
+					</div>
+
+
+
+				</div>
+			</div>
+
+			{% endfor %}
+
+		</div>
+	</div>
+</section>
+
+
+
+<script type="text/javascript">
+	function filterBlocks() {
+		const searchInput = document.getElementById("searchInput").value;
+		const setqrBlocks = document.querySelectorAll(".search_block");
+
+		setqrBlocks.forEach((block) => {
+        const blockId = block.id.toLowerCase(); // Преобразование в нижний регистр
+        if (blockId.includes(searchInput)) {
+            block.style.display = "table-row"; // Показать блок с совпадающим идентификатором
+        } else {
+            block.style.display = "none"; // Скрыть остальные блоки
+        }
+    });
+	}
+	document.getElementById("searchInput").addEventListener("input", filterBlocks);
+
+	// Функция для отображения всех блоков
+	function showAllBlocks() {
+		const setqrBlocks = document.querySelectorAll(".search_block");
+
+		setqrBlocks.forEach((block) => {
+			block.style.display = "table-row"; // Показать все блоки
+		});
+		document.getElementById("searchInput").value = "";
+		document.getElementById("searchInput").setAttribute("placeholder", "Поиск..");
+	}
+
+	
+function filterBlocks1() {
+    const selectedRating = document.getElementById("ratingFilter").value;
+    const setqrBlocks = document.querySelectorAll(".search_block");
+
+    setqrBlocks.forEach((block) => {
+        const blockId = block.id.split(" ");
+        const rating = parseInt(blockId[blockId.length - 1]);
+
+        if (selectedRating === "all") {
+            block.style.display = "block"; // Показать все блоки
+        } else if (rating >= parseInt(selectedRating)) {
+            block.style.display = "block"; // Показать блоки с рейтингом >= выбранного значения
+        } else {
+            block.style.display = "none"; // Скрыть остальные блоки
+        }
+    });
+}
+
+document.getElementById("ratingFilter").addEventListener("change", filterBlocks1);
+</script>
+
+
+   
+<script>
+document.getElementById('filterButton').addEventListener('click', function() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showNearbyBlocks);
+    } else {
+        alert('Geolocation is not supported by this browser.');
+    }
+});
+
+document.getElementById('distanceRange').addEventListener('input', function() {
+    const distanceValue = document.getElementById('distanceRange').value;
+    document.getElementById('distanceValue').textContent = distanceValue;
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showNearbyBlocks);
+    } else {
+        alert('Geolocation is not supported by this browser.');
+    }
+});
+
+function showNearbyBlocks(position) {
+    const userLat = position.coords.latitude;
+    const userLon = position.coords.longitude;
+    const maxDistance = document.getElementById('distanceRange').value; // Получение значения ползунка
+
+    const blocks = document.querySelectorAll('.search_block');
+    blocks.forEach(block => {
+        const [blockLat, blockLon] = block.getAttribute('data-target').split(', ').map(Number);
+        const distance = calculateDistance(userLat, userLon, blockLat, blockLon);
+        if (distance <= maxDistance) {
+            block.style.display = 'block';
+        } else {
+            block.style.display = 'none';
+        }
+    });
+}
+
+function calculateDistance(lat1, lon1, lat2, lon2) {
+    const R = 6371e3; // Радиус Земли в метрах
+    const φ1 = lat1 * Math.PI / 180;
+    const φ2 = lat2 * Math.PI / 180;
+    const Δφ = (lat2 - lat1) * Math.PI / 180;
+    const Δλ = (lon2 - lon1) * Math.PI / 180;
+
+    const a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
+              Math.cos(φ1) * Math.cos(φ2) *
+              Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+    const distance = R * c; // В метрах
+    return distance;
+}
+
+</script>
+{% endblock %}

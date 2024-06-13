@@ -1,0 +1,276 @@
+{% extends 'main.html' %}
+{% block info %}
+{% load static %}
+{% load custom_filters %}
+<style>
+	.rating {
+  unicode-bidi: bidi-override;
+  direction: rtl;
+}
+
+.star {
+  cursor: pointer;
+}
+.star_ok {
+  cursor: pointer;
+  color: gold;
+}
+.star:hover,
+.star:hover ~ .star {
+  color: gold;
+}
+
+.star.clicked,
+.star.clicked ~ .star {
+  color: gold;
+}
+
+</style>
+<section class="ftco-section">
+	<div class="container-fluid px-md-5">
+		<div class="row justify-content-center mb-5 pb-3">
+			<div class="col-md-12 heading-section ftco-animate text-center">
+				<h2 class="mb-1"> Записи к мастеру {{master_check.nameofmaster}}:</h2>
+			</div>
+		</div>
+		<button style="	
+			font-size: 15px;
+			border-radius: 6px;" class="buttonsearch" onclick="window.location.href='/myaccount_admin/'">Назад</button>
+			<br><br>
+		<button style="	
+			font-size: 15px;
+			border-radius: 6px;" class="buttonsearch" onclick="window.location.href='/master_graf/{{master_check.id}}'">Просмотреть график записей</button>
+			<br>
+			
+			
+			<br>
+		<div class="row align-items-center">
+
+
+			{% for i in records %}
+			{% if i.date_rec_info >= current_datetime %}
+		
+			<div class="col-lg-4 d-flex align-items-stretch">
+				<div id="accordion" class="myaccordion w-100 text-center py-5 px-1 px-md-4">
+
+
+					<div class="card">
+						<div class="card-header" id="heading{{i.queue_info}}">
+
+
+							{% if i.user  %}
+							<h3 class="subheading"> {{i.user.first_name}}!</h3>
+							{% else %}
+							<h3 class="subheading"> {{i.name_of}}!</h3>
+							{% endif  %}
+							<hr>
+
+							<h5 class="mb-0"> Салон {{ i.services_info.branch.salon.name }}, по адресу
+								{{i.services_info.branch.name }} </h5>
+
+							<h6 class="mb-0">Контакты салона: {{i.services_info.branch.number}}</h6>
+							{% if i.services != "" %}
+							<hr>
+							<h5 class="mb-0">Услуги: {{i.services}}</h5>
+							{% endif %}
+							{% if i.master != none %}
+							<hr>
+							<h5 class="mb-0">Мастер: {{i.master_id.nameofmaster}}</h5>
+							{% endif %}
+							<hr>
+							<h6 class="mb-0">Номер телефона: {{i.phonenumber}}</h6>
+							<hr>
+							<h5 class="mb-0">Дата записи: <b>{{i.date_rec_info}}</b></h5>
+							<hr>
+							{% if i.time_info != none %}
+							<h5 class="mb-0">Время записи: <b>{{i.time_info}}</b></h5>
+							{% else %}
+							<h5 class="mb-0">Время записи не указано</b></h5>
+							{% endif %}
+							<hr>
+							{% if i.price != none %}
+							<h5 class="mb-0">Сумма: <b>{{i.price}} сом</b></h5>
+							{% endif %}
+
+							<hr>
+							<h5 class="mb-0">Статус: <b>{{i.status}}</b></h5>
+							<br>
+							{% if i.date_rec_info > current_datetime and i.feedback != "Отменено" %}
+							<form method="post">
+								{% csrf_token %}
+								<input type="hidden" name="id" value="{{ i.id }}" />
+								<button type="submit"
+									style=" font-size: 15px; border-radius: 6px;">Отменить
+									запись</button>
+							</form>
+							
+							{% endif %}
+							{% if i.feedback %}
+							<h5 class="mb-0" style="color:orange"> {{i.feedback}}</h5>
+							<div class="rating">
+								{% for _ in ''|ljust:i.rating %}
+									<span class="star_ok">&#9733;</span>
+								{% endfor %}
+
+							</div>
+							{% endif %}
+							{% if i.feedback_rev %}
+							<h6 class="mb-0">Вы:<br> {{i.feedback}}</h6>
+							
+							{% elif i.feedback and i.feedback != "Отменено"  %}
+							
+							<form method="post">
+								{% csrf_token %}
+								<input type="hidden" name="id" value="{{ i.id }}" />
+								<input type="text" name="text" required placeholder="Напишите ответ ?" />
+								
+								  
+								<button type="submit"
+									style=" font-size: 15px; border-radius: 6px;">Оставить ответ</button>
+							</form>
+							{% endif %}
+						
+						
+						</div>
+
+					</div>
+
+
+				</div>
+			</div>
+
+{% endif %}
+			{% endfor %}
+
+		</div>
+		<br><br><br>
+		<div class="row justify-content-center mb-5 pb-3">
+			<div class="col-md-12 heading-section ftco-animate text-center">
+			
+				<h2 class="mb-1">История:</h2>
+			</div>
+		</div>
+		<div class="row align-items-center">
+
+
+			{% for i in records %}
+			{% if i.date_rec_info < current_datetime %}
+			{% if i.feedback != "Отменено"  %}
+			<div class="col-lg-4 d-flex align-items-stretch">
+				<div id="accordion" class="myaccordion w-100 text-center py-5 px-1 px-md-4">
+
+
+					<div class="card">
+						<div class="card-header" id="heading{{i.queue_info}}">
+
+
+							<h5 class="mb-0">{{i.user.first_name}}</h5>
+							<hr>
+
+							<h5 class="mb-0"> Салон {{ i.services_info.branch.salon.name }}, по адресу
+								{{i.services_info.branch.name }} </h5>
+
+							<h6 class="mb-0">Контакты салона: {{i.services_info.branch.number}}</h6>
+							{% if i.services != "" %}
+							<hr>
+							<h5 class="mb-0">Услуги: {{i.services}}</h5>
+							{% endif %}
+							{% if i.master != none %}
+							<hr>
+							<h5 class="mb-0">Мастер: {{i.master_id.nameofmaster}}</h5>
+							{% endif %}
+							<hr>
+							<h6 class="mb-0">Номер телефона: {{i.phonenumber}}</h6>
+							<hr>
+							<h5 class="mb-0">Дата записи: <b>{{i.date_rec_info}}</b></h5>
+							<hr>
+							{% if i.time_info != none %}
+							<h5 class="mb-0">Время записи: <b>{{i.time_info}}</b></h5>
+							{% else %}
+							<h5 class="mb-0">Время записи не указано</b></h5>
+							{% endif %}
+							<hr>
+							{% if i.price != none %}
+							<h5 class="mb-0">Сумма: <b>{{i.price}} сом</b></h5>
+							{% endif %}
+
+						
+							<br>
+							<!-- {% if i.date_rec_info > current_datetime %}
+							<form method="post">
+								{% csrf_token %}
+								<input type="hidden" name="id" value="{{ i.id }}" />
+								<button type="submit"
+									style=" font-size: 15px; border-radius: 6px;">Отменить
+									запись</button>
+							</form>
+							
+							{% endif %} -->
+							{% if i.feedback %}
+							<h6 class="mb-0">Клиент: <br>{{i.feedback}}</h6>
+							<div class="rating">
+								{% for _ in ''|ljust:i.rating %}
+									<span class="star_ok">&#9733;</span>
+								{% endfor %}
+
+							</div>
+							{% endif %}
+							<br>
+							{% if i.feedback_rev %}
+							<h6 class="mb-0">Вы:<br> {{i.feedback}}</h6>
+							
+							{% elif i.feedback and i.feedback != "Отменено"  %}
+							
+							<form method="post">
+								{% csrf_token %}
+								<input type="hidden" name="id" value="{{ i.id }}" />
+								<input type="text" name="text" required placeholder="Напишите ответ ?" />
+								
+								  
+								<button type="submit"
+									style=" font-size: 15px; border-radius: 6px;">Оставить ответ</button>
+							</form>
+							{% endif %}
+						
+						
+						</div>
+
+					</div>
+
+
+				</div>
+			</div>
+{% endif %}
+{% endif %}
+			{% endfor %}
+
+		</div>
+	</div>
+</section>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const stars = document.querySelectorAll('.star');
+  const ratingInput = document.querySelector('input[name="rating"]');
+  
+  stars.forEach(function(star) {
+    star.addEventListener('click', function() {
+      const value = parseInt(star.getAttribute('data-value'));
+      ratingInput.value = value;
+      
+      stars.forEach(function(s) {
+        if (parseInt(s.getAttribute('data-value')) <= value) {
+          s.classList.add('clicked');
+        } else {
+          s.classList.remove('clicked');
+        }
+      });
+    });
+  });
+});
+
+
+</script>
+
+
+{% endblock %}

@@ -1,0 +1,203 @@
+{% extends 'main.html' %}
+{% block info %}
+{% load static %}
+
+    <!-- <section class="hero-wrap js-fullheight back_img"  data-stellar-background-ratio="0.5">
+      <div class="overlay"></div>
+      <div class="container">
+        <div class="row no-gutters slider-text js-fullheight back_img align-items-center justify-content-center">
+          <div class="col-md-10 ftco-animate text-center">
+          	<div class="icon">
+	          	<span class="flaticon-lotus"></span>
+          	</div>
+            <h1> BEAUTY SALON</h1>
+            <div class="row justify-content-center">
+	            <div class="col-md-7 mb-3">
+	            	<p></p>
+	            </div>
+	          </div>
+            <p>
+           
+            	<a href="/contact/" class="btn btn-outline-primary p-3 px-5 py-4 ml-md-2">Контакты</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </section> -->
+		
+		<section class="ftco-section ftco-intro" style="background-image: url(static/images/intro.jpg);margin-top: 75px;">
+			<div class="container">
+				<div class="row justify-content-end">
+					<div class="col-md-6">
+						<div class="heading-section ftco-animate">
+	            <h2 class="mb-4">Уход за собой </h2>
+	          </div>
+	          <p class="ftco-animate">Выглядеть ухоженно в любом возрасте – то чего желает каждая девушка и не только.</p>
+			  <p class="ftco-animate" style="color:black">В нашем сервисе, вы можете выбрать салон, ближайщий филиал и записаться на услуги.</p>
+	          <ul class="mt-5 do-list">
+	          	<li class="ftco-animate"><a href="#"><span class="ion-ios-checkmark-circle mr-3"></span>Маникюр</a></li>
+	          	<li class="ftco-animate"><a href="#"><span class="ion-ios-checkmark-circle mr-3"></span>Волосы</a></li>
+	          </ul>
+					</div>
+				</div>
+			</div>
+		</section>
+
+    
+    <section class="ftco-section ftco-section-services bg-light">
+    	<div class="container-fluid px-md-5">
+    		<div class="row">
+    			<div class="col-md-6 col-lg-3">
+						<div class="services text-center ftco-animate">
+							<div class="icon d-flex justify-content-center align-items-center">
+								<span class="icon-paint-brush"></span>
+							</div>
+							<div class="text mt-3">
+								<h3>Визаж</h3>
+								<p>Макияж - это не про набор косметики, а про внутреннюю уверенность в себе через внешнюю. Это способ самовыражения.</p>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-6 col-lg-3">
+						<div class="services text-center ftco-animate">
+							<div class="icon d-flex justify-content-center align-items-center">
+								<span class="flaticon-beauty-treatment"></span>
+							</div>
+							<div class="text mt-3">
+								<h3>Косметология</h3>
+								<p>Мы поможем Вам достичь здоровой, сияющей и безупречной кожи, раскрывая Вашу естественную красоту.</p>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-6 col-lg-3">
+						<div class="services text-center ftco-animate">
+							<div class="icon d-flex justify-content-center align-items-center">
+								<span class="flaticon-stone"></span>
+							</div>
+							<div class="text mt-3">
+								<h3>Брови и ресницы</h3>
+								<p>Мы предлагаем Вам современные салонные процедуры, которые помогут сделать взгляд незабываемым без вреда для натуральных ресничек.</p>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-6 col-lg-3">
+						<div class="services text-center ftco-animate">
+							<div class="icon d-flex justify-content-center align-items-center">
+								<span class="flaticon-relax"></span>
+							</div>
+							<div class="text mt-3">
+								<h3>Массаж</h3>
+								<p>Общий массаж, антицеллюлитный, лимфодренажный, вакуумно-ролликовый массаж</p>
+							</div>
+						</div>
+					</div>
+				</div>
+    	</div>
+    </section>
+
+	  <section class="ftco-section">
+	  	<div class="container-fluid px-md-5">
+	  		<div class="row justify-content-center mb-5 pb-3">
+          <div class="col-md-12 heading-section ftco-animate text-center">
+			<h3 class="subheading">Бишкек</h3>
+            <h2 class="mb-1">Салоны</h2>
+          </div>
+        </div>
+        <div class="row align-items-center">
+        
+
+			{% for i in salon %}
+			<div class="col-lg-4 d-flex align-items-stretch">
+			  <div id="accordion" class="myaccordion w-100 text-center py-5 px-1 px-md-4">
+				  <div>
+					<img  style="border-radius:5px;object-fit: cover;" width="300px" height="200px"
+					src="/media/{{i.image}}" alt="">
+				  </div>
+			  
+						<div class="card">
+						  <div class="card-header" id="heading{{i.queue_info}}">
+							<h2 class="mb-0">
+							  <button class="d-flex align-items-center justify-content-between btn btn-link" data-toggle="collapse" data-target="#collapse{{i.queue_info}}" aria-expanded="true" aria-controls="collapse{{i.queue_info}}">
+								{{i.name}}
+							   
+							  </button>
+							  <h6>Рейтинг салона: {{i.rating}}</h6>
+							 
+							   <button style="	
+								   font-size: 15px;
+								   border-radius: 6px;" onclick="window.location.href='/salon/{{i.id}}/'">Выбрать филиал</button>
+							
+							</h2>
+						  </div>
+						  
+						</div>
+					  
+						
+				  
+					  </div>
+		  </div>
+
+		  {% endfor %}
+
+
+        
+        </div>
+	  	</div>
+	  </section>
+
+
+
+
+   
+
+    <section class="ftco-counter img" id="section-counter" style="background-image: url(static/images/bg_3.jpg);" data-stellar-background-ratio="0.5">
+			<div class="overlay"></div>
+      <div class="container">
+        <div class="row justify-content-center">
+        	<div class="col-md-10">
+        		<div class="row">
+		          <div class="col-md-6 col-lg-3 d-flex justify-content-center counter-wrap ftco-animate">
+		            <div class="block-18 text-center">
+		              <div class="text">
+		              	<strong class="number" data-number="2560">0</strong>
+		              	<span>Happy Customers</span>
+		              </div>
+		            </div>
+		          </div>
+		          <div class="col-md-6 col-lg-3 d-flex justify-content-center counter-wrap ftco-animate">
+		            <div class="block-18 text-center">
+		              <div class="text">
+		              	<strong class="number" data-number="60">0</strong>
+		              	<span>Treatments</span>
+		              </div>
+		            </div>
+		          </div>
+		          <div class="col-md-6 col-lg-3 d-flex justify-content-center counter-wrap ftco-animate">
+		            <div class="block-18 text-center">
+		              <div class="text">
+		              	<strong class="number" data-number="50">0</strong>
+		              	<span>Years of Experience</span>
+		              </div>
+		            </div>
+		          </div>
+		          <div class="col-md-6 col-lg-3 d-flex justify-content-center counter-wrap ftco-animate">
+		            <div class="block-18 text-center">
+		              <div class="text">
+		              	<strong class="number" data-number="100">0</strong>
+		              	<span>Lesson Conducted</span>
+		              </div>
+		            </div>
+		          </div>
+		        </div>
+		      </div>
+        </div>
+      </div>
+    </section>
+
+   
+
+		
+
+   
+    
+	{% endblock %}

@@ -1,0 +1,165 @@
+{% extends 'main.html' %}
+{% block info %}
+{% load static %}
+    
+		
+		<section class="ftco-section">
+	  	<div class="container-fluid px-md-5">
+	  		<div class="row justify-content-center mb-5 pb-3">
+          <div class="col-md-12 heading-section ftco-animate text-center">
+            <h3 class="subheading">Сервис</h3>
+            <h2 class="mb-1">Услуги</h2>
+          </div>
+        </div>
+        <div class="row align-items-center">
+        	<div class="col-lg-4">
+        		<div class="row no-gutters">
+        			<div class="col-md-6 d-flex align-items-stretch">
+        				<div class="treatment w-100 text-center ftco-animate border border-right-0 border-bottom-0 p-3 py-4">
+									<div class="icon d-flex justify-content-center align-items-center">
+										<span class="icon-paint-brush"></span>
+									</div>
+									<div class="text mt-2">
+										<h3>Визаж</h3>
+										<p>Макияж будет подобран по вашему желанию и настроению.</p>
+									</div>
+								</div>
+        			</div>
+        			<div class="col-md-6 d-flex align-items-stretch">
+        				<div class="treatment w-100 text-center ftco-animate border border-bottom-0 p-3 py-4">
+									<div class="icon d-flex justify-content-center align-items-center">
+										<span class="icon-"></span>
+									</div>
+									<div class="text mt-2">
+										<h3>Услуги маникюра, перикюра</h3>
+										<p>Аккуратный маникюр и педикюр – must have образа современной ухоженной девушки.</p>
+									</div>
+								</div>
+        			</div>
+        			<div class="col-md-6 d-flex align-items-stretch">
+        				<div class="treatment w-100 text-center ftco-animate border border-right-0 p-3 py-4">
+									<div class="icon d-flex justify-content-center align-items-center">
+										<span class="icon-eye-slash"></span>
+									</div>
+									<div class="text mt-2">
+										<h3>Наращивание ресниц</h3>
+										<p>Красивые, длинные закрученные реснички – изюминка в любом женском образе.</p>
+									</div>
+								</div>
+        			</div>
+        			<div class="col-md-6 d-flex align-items-stretch">
+        				<div class="treatment w-100 text-center ftco-animate border p-3 py-4">
+									<div class="icon d-flex justify-content-center align-items-center">
+										<span class="icon-crosshairs"></span>
+									</div>
+									<div class="text mt-2">
+										<h3>Окрашивание волос</h3>
+										<p>Обладать естественным оттенком волос и при этом яркой внешностью сегодня возможно благодаря методу окрашивания.</p>
+									</div>
+								</div>
+        			</div>
+        		</div>
+        	</div>
+
+
+      			<div class="col-lg-4 d-flex align-items-stretch">
+					<div id="accordion" class="myaccordion w-100 text-center py-5 px-1 px-md-4">
+						<div>
+							<h3>Цены</h3>
+							<p></p>
+						</div>
+						{% for i in services %}
+							  <div class="card">
+								<div class="card-header" id="heading{{i.queue_info}}">
+								  <h2 class="mb-0">
+									<button class="d-flex align-items-center justify-content-between btn btn-link" data-toggle="collapse" data-target="#collapse{{i.queue_info}}" aria-expanded="true" aria-controls="collapse{{i.queue_info}}">
+									  {{i.name}}
+									  <i class="fa" aria-hidden="true"></i>
+									</button>
+									
+									 <button style="	
+										 font-size: 15px;
+										 border-radius: 6px;" onclick="window.location.href='/record/{{i.id}}/'">Быстрая запись</button>
+									
+								  </h2>
+								</div>
+								<div id="collapse{{i.queue_info}}" class="collapse show" aria-labelledby="heading{{i.queue_info}}" data-parent="#accordion">
+								  <div class="card-body text-left">
+									<ul>
+									
+										{% for j in view %}
+										
+										{% if i.name == j.service.name %}
+										<li class="d-flex">
+											<span>{{j.name}}</span>
+											<span>-</span>
+											<span>{{j.price}} {{j.currency}}</span>
+										</li>
+										{% endif %}
+										{% endfor %}
+								  
+									</ul>
+								  </div>
+								</div>
+							  </div>
+							{% endfor %}
+						
+							</div>
+				</div>
+
+
+        	<div class="col-lg-4">
+        		<div class="row no-gutters">
+        			<div class="col-md-6 d-flex align-items-stretch">
+        				<div class="treatment w-100 text-center ftco-animate border border-right-0 border-bottom-0 p-3 py-4">
+									<div class="icon d-flex justify-content-center align-items-center">
+										<span class="flaticon-beauty-treatment"></span>
+									</div>
+									<div class="text mt-2">
+										<h3>Косметология</h3>
+										<p>Косметология – это наука о красоте о здоровье кожи и о сохранении ее молодости.</p>
+									</div>
+								</div>
+        			</div>
+        			<div class="col-md-6 d-flex align-items-stretch">
+        				<div class="treatment w-100 text-center ftco-animate border border-bottom-0 p-3 py-4">
+									<div class="icon d-flex justify-content-center align-items-center">
+										<span class="flaticon-relax"></span>
+									</div>
+									<div class="text mt-2">
+										<h3>Ламинирование бровей и ресниц</h3>
+										<p>инновационная процедура, направленная на укрепление собственных ресниц и бровей.</p>
+									</div>
+								</div>
+        			</div>
+        			<div class="col-md-6 d-flex align-items-stretch">
+        				<div class="treatment w-100 text-center ftco-animate border border-right-0 p-3 py-4">
+									<div class="icon d-flex justify-content-center align-items-center">
+										<span class="flaticon-massage"></span>
+									</div>
+									<div class="text mt-2">
+										<h3>Массаж</h3>
+										<p>уникальная методика, направленная на диагностику и поэтапную проработку тела.</p>
+									</div>
+								</div>
+        			</div>
+        			<div class="col-md-6 d-flex align-items-stretch">
+        				<div class="treatment w-100 text-center ftco-animate border p-3 py-4">
+									<div class="icon d-flex justify-content-center align-items-center">
+										<span class="icon-scissors"></span>
+									</div>
+									<div class="text mt-2">
+										<h3>Стрижка и укладка волос</h3>
+										<p>Если вы не знаете, где подстричься стильно и по адекватной цене, то мы ждем вас к себе в гости!</p>
+									</div>
+								</div>
+        			</div>
+        		</div>
+        	</div>
+        </div>
+	  	</div>
+	  </section>
+
+   
+    
+	  {% endblock %}

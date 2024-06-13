@@ -1,0 +1,211 @@
+{% load static %}
+<html lang="ru">
+  <head>
+    <title>ON STUDIO</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700&display=swap" rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css?family=Prata&display=swap" rel="stylesheet">
+
+     <link rel="stylesheet" type="text/css" href="{% static 'css/open-iconic-bootstrap.min.css' %}" media='all' >
+    <link rel="stylesheet" type="text/css"  href="{% static 'css/animate.css' %}" media='all' >
+    
+    <link rel="stylesheet" type="text/css"  href="{% static 'css/owl.carousel.min.css' %}" media='all' >
+    <link rel="stylesheet" type="text/css"  href="{% static 'css/owl.theme.default.min.css' %}" media='all' >
+    <link rel="stylesheet" type="text/css"  href="{% static 'css/magnific-popup.css' %}" media='all' >
+
+    <link rel="stylesheet" type="text/css"  href="{% static 'css/aos.css' %}" media='all' >
+
+    <link rel="stylesheet" type="text/css"  href="{% static 'css/ionicons.min.css' %}" media='all' >
+
+    <link rel="stylesheet" type="text/css"  href="{% static 'css/bootstrap-datepicker.css' %}" media='all' >
+    <link rel="stylesheet" type="text/css"  href="{% static 'css/jquery.timepicker.css' %}" media='all' >
+
+    
+    <link rel="stylesheet" type="text/css"  href="{% static 'css/flaticon.css' %}" media='all' >
+    <link rel="stylesheet" type="text/css"  href="{% static 'css/icomoon.css' %}" media='all' >
+    <link rel="stylesheet" type="text/css"  href="{% static 'css/style.css' %}" media='all' >
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light ftco-navbar-light-2" id="ftco-navbar">
+        <div class="container">
+          <a class="navbar-brand" href="/"><span class="flaticon-lotus"></span>ON STUDIO</a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="oi oi-menu"></span> Меню
+          </button>
+          <div class="collapse navbar-collapse" id="ftco-nav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item active"><a href="/" class="nav-link">Главная</a></li>
+              <li class="nav-item"><a href="/about/" class="nav-link">О нас</a></li>
+              <li class="nav-item"><a href="/pricing/" class="nav-link">Услуги</a></li>
+              <li class="nav-item"><a href="/specialists/" class="nav-link">Специалисты</a></li>
+              <li class="nav-item"><a href="/blog/" class="nav-link">Акции и новости</a></li>
+              <li class="nav-item"><a href="/contact/" class="nav-link">Контакты</a></li>
+              {% if request.user.is_authenticated %}
+              <li class="nav-item"><a  class="nav-link" href="/myaccount/">Мои записи</a></li>
+              <li class="nav-item"><a  class="nav-link" href="/logout/" >Выйти</a></li>
+              {% else %}
+            <li class="nav-item"><a href="/auth/" class="nav-link">Войти</a></li>
+            {% endif %}
+            
+            </ul>
+          </div>
+          </div>
+      </nav>
+    <!-- END nav -->
+
+    <form method="post">
+        {% csrf_token %}
+        <section class="ftco-section">
+        <div class="container-fluid px-md-5">
+            <div class="row justify-content-center mb-5 pb-3">
+          <div class="col-md-12 heading-section ftco-animate text-center">
+            <h3 class="subheading">Быстрая запись</h3>
+            <h2 class="mb-1">Выбранная услуга {{ services.name }}</h2>
+          </div>
+        </div>
+        <div class="row align-items-center">
+        
+
+
+                <div class="col-lg-4 d-flex align-items-stretch">
+                    <div id="accordion" class="myaccordion w-100 text-center py-5 px-1 px-md-4">
+                        <div>
+                            <h3>Выберите виды услуг</h3>
+                            <p></p>
+                        </div>
+                    
+                              <div class="card">
+                                <div class="card-header" id="heading{{i.queue_info}}">
+                                  <h2 class="mb-0">
+                                    <button class="d-flex align-items-center justify-content-between btn btn-link" data-toggle="collapse" data-target="#collapse{{i.queue_info}}" aria-expanded="true" aria-controls="collapse{{i.queue_info}}">
+                                      {{services.name}}
+                                      <i class="fa" aria-hidden="true"></i>
+                                    </button>
+                                   
+                                  </h2>
+                                </div>
+                                <div id="collapse{{i.queue_info}}" class="collapse show" aria-labelledby="heading{{i.queue_info}}" data-parent="#accordion">
+                                  <div class="card-body text-left">
+                                    <ul style="justify-content: start;
+                                        display: flex;
+                                        flex-direction: column;
+                                        align-items: start;">
+                                    
+                                        {% for j in view %}
+                                        
+                                        {% if services.name == j.service.name %}
+                                        <li class="d-flex" style="justify-content: space-evenly;
+                                            color: black; gap:10px">
+                                          <input type="checkbox" id="{{j.name}}" name="checkbox{{j.id}}" value="{{j.name}}">
+                                             <label for="{{j.name}}">{{j.name}} - {{j.price}} {{j.currency}}
+                                        </li>
+                                        {% endif %}
+                                        {% endfor %}
+                                  
+                                    </ul>
+                                  </div>
+                                </div>
+                              </div>
+                           
+                        
+                            </div>
+                </div>
+                <div class="col-lg-4 ">
+                <div id="collapse{{i.queue_info}}" class="collapse show" aria-labelledby="heading{{i.queue_info}}" data-parent="#accordion">
+                                  <div class="card-body text-left">
+                                    <ul style="justify-content: start;
+                                        display: flex;
+                                        flex-direction: column;
+                                        align-items: start;">
+                                   
+                                           
+                                       
+                                   
+                                  
+                                    </ul>
+                                  </div>
+                                </div>
+</div>
+            <div >
+         
+            </div>
+            
+        </div>
+           <section class="ftco-section">
+                            <div class="container">
+                                <div class="row justify-content-center mb-5">
+                             <div>
+                                                        <h3>Выберите мастера</h3>
+                                                        <p></p>
+                                                    </div>
+                            </div>
+                                <div class="row">
+                                    {% for i in masters %}
+                                    <div class="col-lg-3 d-flex">
+                                        <div class="coach align-items-stretch">
+                                            <!-- <div class="img" style="background-image: url({{i.photo.url}});"></div> -->
+                                            <img  class="img" src="{{i.photo.url}}" >
+                                            <div class="text bg-white p-4 ftco-animate">
+                                                <span class="subheading">{{ i.direction }}</span>
+                                                <h3><a href="#">{{i.nameofmaster}}</a></h3>
+                                                <p> {{i.experience}}</p>
+                                                <ul class="ftco-social-media d-flex mt-4">
+                                                    <li class="d-flex" style="justify-content: space-evenly;
+                                                                                                color: black; gap:10px">
+                                           <input type="checkbox" id="{{i.nameofmaster}}" name="masters" value="{{i.nameofmaster}}">
+                                           <label for="{{i.nameofmaster}}">Выбрать мастера </label>
+                                           </li>
+                                      </ul>
+                                                <p></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                    
+                                </div>
+                                 Введите номер телефона<br>
+                                <input type="number"  name="number" required><br><br>
+                                 Выберите удобную дату для записи<br>
+                                 <input type="datetime-local"  name="date_rec" required><br>
+                                 Наши специалисты, позвонят вам для согласования времени и/или подтверждения записи
+                                 <br><br>
+                                 <button style="	background: transparent;
+                                                                                     font-size: 15px;
+                                                                                     border-radius: 6px;" type="submit"> Записаться</button>
+                            </div>
+                        </section>
+        </div>
+       
+      </section>
+     
+</form>
+   
+    
+  
+
+  <!-- loader -->
+  <div id="ftco-loader" class="show fullscreen"><svg class="circular" width="48px" height="48px"><circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee"/><circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#F96D00"/></svg></div>
+
+  <script src="{% static 'js/jquery.min.js' %}"></script>
+  <script src="{% static 'js/jquery-migrate-3.0.1.min.js' %}"></script>
+  <script src="{% static 'js/popper.min.js' %}"></script>
+  <script src="{% static 'js/bootstrap.min.js' %}"></script>
+  <script src="{% static 'js/jquery.easing.1.3.js' %}"></script>
+  <script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
+  <script src="{% static 'js/jquery.stellar.min.js' %}"></script>
+  <script src="{% static 'js/owl.carousel.min.js' %}"></script>
+  <script src="{% static 'js/jquery.magnific-popup.min.js' %}"></script>
+  <script src="{% static 'js/aos.js' %}"></script>
+  <script src="{% static 'js/jquery.animateNumber.min.js' %}"></script>
+  <script src="{% static 'js/bootstrap-datepicker.js' %}"></script>
+  <script src="{% static 'js/jquery.timepicker.min.js' %}"></script>
+  <script src="{% static 'js/scrollax.min.js' %}"></script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
+  <script src="{% static 'js/google-map.js' %}"></script>
+  <script src="{% static 'js/main.js' %}"></script>
+    
+  </body>
+</html>
